@@ -7,7 +7,7 @@ def main():
     vc = VideoCapture(0)
 
     face_cropper: FaceCropper = FaceCropper()
-    ed_model = EmotionModel()
+    ed_model = EmotionModel(which=1)
 
     if vc.isOpened(): # try to get the first frame
         rval, frame = vc.read()

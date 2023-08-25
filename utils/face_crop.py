@@ -47,5 +47,5 @@ class FaceCropper:
         x, y, w, h = face_rect
         frame_crop = frame[y:y + h, x:x + w]
         # Must crop to 48x48 to match the emotion recognition dataset
-        face_img = np.copy(resize(frame_crop, (48, 48)))
+        face_img = np.expand_dims(np.expand_dims(resize(frame, (48, 48)), -1), 0)
         return face_img

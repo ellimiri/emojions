@@ -2,12 +2,14 @@ from cv2 import flip, imshow, rectangle, waitKey, namedWindow, VideoCapture, des
 from utils.face_crop import FaceCropper
 from models.emotion_model import EmotionModel
 
-def main():
-    namedWindow("test")
-    vc = VideoCapture(0)
+from pyautogui import typewrite, hotkey
 
+def main():
     face_cropper: FaceCropper = FaceCropper()
     ed_model = EmotionModel(which=1)
+
+    namedWindow("test")
+    vc = VideoCapture(0)
 
     if vc.isOpened(): # try to get the first frame
         rval, frame = vc.read()
@@ -45,4 +47,5 @@ def main():
     destroyWindow("preview")
 
 if __name__ == "__main__":
-    main()
+    hotkey("command", "tab", interval=0.25)
+    typewrite("eepy eepy")

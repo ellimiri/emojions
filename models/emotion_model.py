@@ -6,7 +6,7 @@ from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 
 class EmotionModel:
-    def __init__(self, which=1) -> None:
+    def __init__(self) -> None:
         self.emotion_dict = {
             0: "Angry", 
             1: "Disgusted", 
@@ -26,10 +26,7 @@ class EmotionModel:
             5: "😭",
             6: "😳"
         }
-        if which == 1:
-            self._init_saranshbht()
-        else:
-            self._init_atulapra()
+        self._init_atulapra()
 
     def _init_saranshbht(self):
         """
@@ -80,6 +77,9 @@ class EmotionModel:
         self.model.add(Dense(7, activation='softmax'))
 
         self.model.load_weights('models/model_atulapra.h5')
+
+    def get_full_prediction(self, face_img):
+        return self.model.predict(face_img)
     
     def get_prediction_index(self, face_img):
         """

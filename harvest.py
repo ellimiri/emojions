@@ -9,6 +9,9 @@ import os
 from argparse import ArgumentParser
 
 def main():
+    """
+    For the purposes of obtaining images for transfer learning
+    """
     argparser = ArgumentParser("harvest")
     argparser.add_argument("emoji")
     args = argparser.parse_args()

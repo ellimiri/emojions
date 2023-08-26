@@ -53,7 +53,7 @@ def active(face_cropper: FaceCropper, ed_model: EmotionModel, emoji_display: Emo
 
 def main():
     face_cropper: FaceCropper = FaceCropper()
-    ed_model = EmotionModel(which=1)
+    ed_model = EmotionModel()
     emoji_display = EmojiDisplay()
 
     def activate_thingo():

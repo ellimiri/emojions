@@ -16,6 +16,16 @@ class EmotionModel:
             5: "Sad", 
             6: "Surprised"
         }
+
+        self.emoji_dict = {
+            0: "😡",
+            1: "😖",
+            2: "😰",
+            3: "😄",
+            4: "😐",
+            5: "😭",
+            6: "😳"
+        }
         if which == 1:
             self._init_saranshbht()
         else:
@@ -71,11 +81,22 @@ class EmotionModel:
 
         self.model.load_weights('models/model_atulapra.h5')
     
-    def get_prediction(self, face_img):
+    def get_prediction_index(self, face_img):
         """
         Returns the text of the emotion predicted from the given face image.
         """
         prediction = self.model.predict(face_img)
         argmax_index = int(np.argmax(prediction))
-        return self.emotion_dict[argmax_index]
+        return argmax_index
+    
+    def get_emotion_prediction(self, face_img):
+        """
+        Returns the text of the emotion predicted from the given face image.
+        """
+        idx = self.get_prediction_index(face_img)
+        return self.emotion_dict[idx]
+    
+    def get_emoji_prediction(self, face_img):
+        idx = self.get_prediction_index(face_img)
+        return self.emoji_dict[idx]
     

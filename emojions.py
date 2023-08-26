@@ -1,12 +1,14 @@
 from cv2 import flip, imshow, rectangle, waitKey, namedWindow, VideoCapture, destroyWindow, cvtColor, COLOR_BGR2GRAY, putText, FONT_HERSHEY_DUPLEX, LINE_AA
 from utils.face_crop import FaceCropper
 from models.emotion_model import EmotionModel
+from utils.emoji_display import EmojiDisplay
 
 from pyautogui import typewrite, hotkey
 
 def main():
     face_cropper: FaceCropper = FaceCropper()
     ed_model = EmotionModel(which=1)
+    emoji_display = EmojiDisplay()
 
     namedWindow("test")
     vc = VideoCapture(0)
@@ -30,14 +32,17 @@ def main():
         # face is a tuple with x, y, width and height; extract
         face_detected, face = face_cropper.get_face(gray_image)
         if face_detected:
-            # Put rectangle around face on the display
             x, y, w, h = face
-            rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
-
+            
             # Retrieve an image of correct proportions and pass through emotion detection model
             face_image = face_cropper.get_face_img(gray_image, face)
-            prediction = ed_model.get_prediction(face_image)
-            putText(image, prediction, (x, y), FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 2, LINE_AA)
+            emotion = ed_model.get_emotion_prediction(face_image)
+            emoji = ed_model.get_emoji_prediction(face_image)
+
+            # Display emotion and emoji; put rect around face
+            image = emoji_display.compose_images(image, emoji)
+            putText(image, emotion, (x, y), FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 2, LINE_AA)
+            rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
 
         key = waitKey(20)
         if key == 27: # exit on ESC
@@ -47,5 +52,4 @@ def main():
     destroyWindow("preview")
 
 if __name__ == "__main__":
-    hotkey("command", "tab", interval=0.25)
-    typewrite("eepy eepy")
+    main()

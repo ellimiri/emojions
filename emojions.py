@@ -5,8 +5,12 @@ from utils.emoji_display import EmojiDisplay
 
 from pyautogui import typewrite, hotkey
 
+from pynput import keyboard
+from pynput.keyboard import Events
+from pyperclip import copy
+
 def active(face_cropper, ed_model, emoji_display):
-    namedWindow("test")
+    namedWindow('Emojions')
     vc = VideoCapture(0)
 
     if vc.isOpened(): # try to get the first frame
@@ -16,7 +20,7 @@ def active(face_cropper, ed_model, emoji_display):
         rval = False
 
     while rval:
-        imshow("preview", image) # show current frame
+        imshow("Emojions", image) # show current frame
 
         # read and flip frame from the video capture
         rval, frame = vc.read()
@@ -42,19 +46,29 @@ def active(face_cropper, ed_model, emoji_display):
 
         key = waitKey(20)
         if key == 27: # exit on ESC
-            break
-
-    vc.release()
-    destroyWindow("preview")
+            vc.release()
+            destroyWindow('Emojions')
+            waitKey(1)
+            return emoji
 
 def main():
     face_cropper: FaceCropper = FaceCropper()
     ed_model = EmotionModel(which=1)
     emoji_display = EmojiDisplay()
 
-    while True:
-        active(face_cropper, ed_model, emoji_display)
-        break
+    def activate_thingo():
+        return active(face_cropper, ed_model, emoji_display)
+
+    with keyboard.Events() as events:
+        for event in events:
+            if isinstance(event, Events.Release) and event.key == keyboard.Key.up:
+                emoji = activate_thingo()
+                # Go to the active window you were on before, and paste the emoji
+                hotkey("command", "tab", interval=0.25)
+                copy(emoji)
+                hotkey("command", "v", interval=0.25)
+            elif isinstance(event, Events.Release) and event.key == keyboard.Key.down:
+                break
 
 if __name__ == "__main__":
     main()

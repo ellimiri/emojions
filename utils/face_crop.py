@@ -9,10 +9,10 @@ class FaceCropper:
             CascadeClassifier(data.haarcascades + "haarcascade_frontalface_default.xml")
         self.scale_factor = 1.1
         self.min_neighbours = 5
-        self.min_size = (48, 48)
+        self.min_size = (200, 200)
 
         # parameters for image cropping
-        self.face_img_size = 220
+        self.face_img_size = (180, 180)
         
     def get_face(self, frame):
         """
@@ -53,6 +53,7 @@ class FaceCropper:
     def get_face_img_for_emoji(self, frame, face_rect):
         """Please ensure that the frame is in greyscale before sending through!"""
         x, y, w, h = face_rect
-        padding = w
-        frame_crop = frame[y-padding:y + h + padding, x - padding:x + w + padding]
-        return frame_crop
+        pad = int(np.floor(w / 4))
+        frame_crop = frame[y-pad:y + h + pad, x - pad:x + w + pad]
+        result = resize(frame_crop, self.face_img_size)
+        return result

@@ -1,4 +1,5 @@
 from cv2 import flip, imshow, rectangle, waitKey, namedWindow, VideoCapture, destroyWindow, cvtColor, COLOR_BGR2GRAY, putText, FONT_HERSHEY_DUPLEX, LINE_AA
+from models.emoji_model import EmojiModel
 from utils.face_crop import FaceCropper
 from models.emotion_model import EmotionModel
 from utils.emoji_display import EmojiDisplay
@@ -9,7 +10,7 @@ from pynput import keyboard
 from pynput.keyboard import Events
 from pyperclip import copy
 
-def active(face_cropper: FaceCropper, ed_model: EmotionModel, emoji_display: EmojiDisplay):
+def active(face_cropper: FaceCropper, model, emoji_display: EmojiDisplay):
     namedWindow('Emojions')
     vc = VideoCapture(0)
 
@@ -35,13 +36,14 @@ def active(face_cropper: FaceCropper, ed_model: EmotionModel, emoji_display: Emo
             x, y, w, h = face
             
             # Retrieve an image of correct proportions and pass through emotion detection model
-            face_image = face_cropper.get_face_img_for_emotion(gray_image, face)
-            emotion = ed_model.get_emotion_prediction(face_image)
-            emoji = ed_model.get_emoji_prediction(face_image)
+            #face_image = face_cropper.get_face_img_for_emotion(gray_image, face)
+            #emotion = ed_model.get_emotion_prediction(face_image)
+            face_image = face_cropper.get_face_img_for_emoji(gray_image, face)
+            emoji = model.get_emoji_prediction(face_image)
 
             # Display emotion and emoji; put rect around face
             image = emoji_display.compose_images(image, emoji)
-            putText(image, emotion, (x, y), FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 2, LINE_AA)
+            #putText(image, emotion, (x, y), FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 2, LINE_AA)
             rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
 
         key = waitKey(20)
@@ -53,11 +55,13 @@ def active(face_cropper: FaceCropper, ed_model: EmotionModel, emoji_display: Emo
 
 def main():
     face_cropper: FaceCropper = FaceCropper()
-    ed_model = EmotionModel()
+    #ed_model = EmotionModel()
+    model = EmojiModel()
+    model.load()
     emoji_display = EmojiDisplay()
 
     def activate_thingo():
-        return active(face_cropper, ed_model, emoji_display)
+        return active(face_cropper, model, emoji_display)
 
     with keyboard.Events() as events:
         for event in events:

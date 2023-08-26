@@ -1,4 +1,4 @@
-from cv2 import CascadeClassifier, data, resize
+from cv2 import CascadeClassifier, data, resize, cvtColor, COLOR_GRAY2RGB
 import numpy as np
 
 class FaceCropper:
@@ -9,10 +9,11 @@ class FaceCropper:
             CascadeClassifier(data.haarcascades + "haarcascade_frontalface_default.xml")
         self.scale_factor = 1.1
         self.min_neighbours = 5
-        self.min_size = (200, 200)
+        self.min_size = (20, 20)
 
         # parameters for image cropping
-        self.face_img_size = (180, 180)
+        # self.face_img_size = (180, 180)
+        self.face_img_size = (256, 256)
         
     def get_face(self, frame):
         """
@@ -54,6 +55,8 @@ class FaceCropper:
         """Please ensure that the frame is in greyscale before sending through!"""
         x, y, w, h = face_rect
         pad = int(np.floor(w / 4))
+        frame = cvtColor(frame, COLOR_GRAY2RGB)
         frame_crop = frame[y-pad:y + h + pad, x - pad:x + w + pad]
-        result = resize(frame_crop, self.face_img_size)
+        result = np.expand_dims(np.expand_dims(resize(frame_crop, self.face_img_size), -1), 0)
+        #result = resize(frame_crop, self.face_img_size)
         return result

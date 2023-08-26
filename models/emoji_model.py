@@ -15,6 +15,16 @@ import os
 
 class EmojiModel:
     def __init__(self):
+        self.emoji_dict = {
+            0: "😈",
+            1: "😳",
+            2: "😄",
+            3: "🙁",
+            4: "😜",
+            5: "🥰",
+            6: "😭"
+        }
+
         self.base = InceptionV3(include_top=False, input_shape=(256, 256, 3), classes=7, pooling="avg")
         self.model = Sequential()
         # Copy over all layers in the base emotion recog model except for the last two
@@ -42,10 +52,22 @@ class EmojiModel:
         epochs = 10
         lr = 0.001
         
-        self.model.compile(optimizer=Adam(lr=lr),loss='categorical_crossentropy',metrics=['accuracy'])
+        self.model.compile(optimizer=Adam(lr=lr),loss='sparse_categorical_crossentropy',metrics=['accuracy'])
 
         history = self.model.fit(training_dataset, validation_data=validation_dataset, epochs=epochs)
 
         self.model.save_weights('emoji.h5')
+    
+    def load(self):
+        self.model.load_weights('emoji.h5')
+    
+    def get_prediction_index(self, face_img):
+        prediction = self.model.predict(face_img)
+        argmax_index = int(np.argmax(prediction))
+        return argmax_index
+
+    def get_emoji_prediction(self, face_img):
+        idx = self.get_prediction_index(face_img)
+        return self.emoji_dict[idx]
 
 

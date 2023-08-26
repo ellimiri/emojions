@@ -1,7 +1,5 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
-from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
 
 import numpy as np
 

@@ -98,9 +98,8 @@ def mainfix():
             image = imread(src)
             yes, face = cropper.get_face(image)
             if yes:
-                # crop = cropper.get_face_img_for_emotion(image, face)
-                # imwrite(dst, image)
-                pass
+                crop = cropper.get_face_img_for_emotion(image, face)
+                imwrite(dst, crop)
             else:
                 print(dst)
 
@@ -110,4 +109,4 @@ def train():
     print("done ??")
 
 if __name__=="__main__":
-    train()
+    mainfix()

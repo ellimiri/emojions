@@ -5,11 +5,7 @@ from utils.emoji_display import EmojiDisplay
 
 from pyautogui import typewrite, hotkey
 
-def main():
-    face_cropper: FaceCropper = FaceCropper()
-    ed_model = EmotionModel(which=1)
-    emoji_display = EmojiDisplay()
-
+def active(face_cropper, ed_model, emoji_display):
     namedWindow("test")
     vc = VideoCapture(0)
 
@@ -50,6 +46,15 @@ def main():
 
     vc.release()
     destroyWindow("preview")
+
+def main():
+    face_cropper: FaceCropper = FaceCropper()
+    ed_model = EmotionModel(which=1)
+    emoji_display = EmojiDisplay()
+
+    while True:
+        active(face_cropper, ed_model, emoji_display)
+        break
 
 if __name__ == "__main__":
     main()

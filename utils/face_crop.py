@@ -49,3 +49,10 @@ class FaceCropper:
         # Must crop to 48x48 to match the emotion recognition dataset
         face_img = np.expand_dims(np.expand_dims(resize(frame_crop, (48, 48)), -1), 0)
         return face_img
+    
+    def get_face_img_for_emoji(self, frame, face_rect):
+        """Please ensure that the frame is in greyscale before sending through!"""
+        x, y, w, h = face_rect
+        padding = w
+        frame_crop = frame[y-padding:y + h + padding, x - padding:x + w + padding]
+        return frame_crop

@@ -9,4 +9,3 @@ def get_new_file_counter(emoji):
         maxcount = max(count, maxcount)
     
     return maxcount
-

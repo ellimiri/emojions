@@ -1,6 +1,7 @@
+from models.emoji_model import EmojiModel
 from utils.face_crop import FaceCropper
 from utils.misc import get_new_file_counter
-from cv2 import flip, imshow, rectangle, waitKey, namedWindow, VideoCapture, destroyWindow, cvtColor, COLOR_BGR2GRAY, imwrite
+from cv2 import flip, imshow, rectangle, waitKey, namedWindow, VideoCapture, destroyWindow, cvtColor, COLOR_BGR2GRAY, imwrite, imread
 
 import numpy as np
 import time
@@ -75,5 +76,38 @@ def main():
             destroyWindow('Emojions')
             waitKey(1)
 
+# perhaps actually irrelevant.
+def mainfix():
+    """
+    I messed up with the image size from my initial data runs, should have been 48x48
+    This is a method to convert the existing images back to 48x48 greyscale as needed
+    """
+    # classifications = ["devil", "flushed", "grin", "sad", "silly", "smiling_hearts", "sob"]
+    classifications = ["devil"]
+
+    cropper = FaceCropper()
+
+    datacopy = os.path.join(os.getcwd(), "data_copy")
+    data = os.path.join(os.getcwd(), "data")
+    for cls in classifications:
+        sourcepath = os.path.join(os.getcwd(), "data_copy", cls)
+        destpath = os.path.join(os.getcwd(), "data", cls)
+        for imgpath in os.listdir(sourcepath):
+            src = os.path.join(sourcepath, imgpath)
+            dst = os.path.join(destpath, imgpath)
+            image = imread(src)
+            yes, face = cropper.get_face(image)
+            if yes:
+                # crop = cropper.get_face_img_for_emotion(image, face)
+                # imwrite(dst, image)
+                pass
+            else:
+                print(dst)
+
+def train():
+    model = EmojiModel()
+    model.train()
+    print("done ??")
+
 if __name__=="__main__":
-    main()
+    train()

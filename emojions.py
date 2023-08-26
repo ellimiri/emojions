@@ -3,13 +3,13 @@ from utils.face_crop import FaceCropper
 from models.emotion_model import EmotionModel
 from utils.emoji_display import EmojiDisplay
 
-from pyautogui import typewrite, hotkey
+from pyautogui import hotkey
 
 from pynput import keyboard
 from pynput.keyboard import Events
 from pyperclip import copy
 
-def active(face_cropper, ed_model, emoji_display):
+def active(face_cropper: FaceCropper, ed_model: EmotionModel, emoji_display: EmojiDisplay):
     namedWindow('Emojions')
     vc = VideoCapture(0)
 
@@ -35,7 +35,7 @@ def active(face_cropper, ed_model, emoji_display):
             x, y, w, h = face
             
             # Retrieve an image of correct proportions and pass through emotion detection model
-            face_image = face_cropper.get_face_img(gray_image, face)
+            face_image = face_cropper.get_face_img_for_emotion(gray_image, face)
             emotion = ed_model.get_emotion_prediction(face_image)
             emoji = ed_model.get_emoji_prediction(face_image)
 

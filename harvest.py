@@ -33,7 +33,7 @@ def main():
     start = time.time()
 
     # initialise counter to the number of images currently in the given emoji dir
-    counter = 0
+    counter = get_new_file_counter(emoji)
 
     while rval:
         imshow("Emojions", image) # show current frame
@@ -43,6 +43,7 @@ def main():
         if not rval:
             break
         image = flip(frame, 1)
+        frame = image.copy()
         gray_image = cvtColor(image, COLOR_BGR2GRAY)
 
         # face is a tuple with x, y, width and height; extract
@@ -56,7 +57,7 @@ def main():
             pad = int(np.floor(w / 4))
             rectangle(image, (x - pad, y - pad), (x + w + pad, y + h + pad), (0, 255, 0), 4)
 
-            fcimage = face_cropper.get_face_img_for_emoji(gray_image, face)
+            fcimage = face_cropper.get_face_img_for_emotion(gray_image, face)
 
             now = time.time()
             # Save at 0.5 second intervals, and give a 10 second window to get ready before saving
@@ -64,7 +65,9 @@ def main():
                 # Save image cropped to face
                 img_name = f"{counter}.png"
                 path = os.path.join(os.getcwd(), "data", emoji, img_name)
+                fullpath = path = os.path.join(os.getcwd(), "data_full", emoji, img_name)
                 imwrite(path, fcimage)
+                imwrite(fullpath, frame) # retain full screenshot for later
                 print(f"Written image number {counter}")
 
                 counter += 1
@@ -109,4 +112,4 @@ def train():
     print("done ??")
 
 if __name__=="__main__":
-    mainfix()
+    main()

@@ -16,13 +16,12 @@ import os
 class EmojiModel:
     def __init__(self):
         self.emoji_dict = {
-            0: "😈",
-            1: "😳",
-            2: "😄",
-            3: "🙁",
-            4: "😜",
-            5: "🥰",
-            6: "😭"
+            "😳",
+            "😄",
+            "😐"
+            "🙁",
+            "😜",
+            "🥰"
         }
 
         self.base = InceptionV3(include_top=False, input_shape=(256, 256, 3), classes=7, pooling="avg")
